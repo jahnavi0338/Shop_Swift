@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShopSwift - Online Shopping</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#4f46e5',secondary:'#f97316',accent1:'#10b981',accent2:'#8b5cf6',accent3:'#ec4899'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+font-family: 'Inter', sans-serif;
+}
+.hero-section {
+background-image: url('https://readdy.ai/api/search-image?query=Modern%20e-commerce%20website%20hero%20image%20with%20stylish%20products%20arranged%20on%20the%20right%20side%20and%20clean%20empty%20space%20on%20the%20left%20side%20for%20text.%20The%20image%20should%20have%20a%20soft%20gradient%20background%20transitioning%20from%20light%20to%20slightly%20darker%20on%20the%20right%2C%20creating%20a%20natural%20flow.%20Products%20should%20include%20fashion%20items%2C%20electronics%2C%20and%20home%20goods%20with%20a%20premium%20aesthetic.%20The%20overall%20look%20should%20be%20minimal%2C%20elegant%2C%20and%20contemporary.&width=1600&height=600&seq=1&orientation=landscape');
+background-size: cover;
+background-position: center;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+-webkit-appearance: none;
+margin: 0;
+}
+.custom-checkbox {
+position: relative;
+padding-left: 28px;
+cursor: pointer;
+user-select: none;
+}
+.custom-checkbox input {
+position: absolute;
+opacity: 0;
+cursor: pointer;
+}
+.checkmark {
+position: absolute;
+top: 0;
+left: 0;
+height: 18px;
+width: 18px;
+background-color: #fff;
+border: 1px solid #d1d5db;
+border-radius: 4px;
+}
+.custom-checkbox:hover input ~ .checkmark {
+background-color: #f3f4f6;
+}
+.custom-checkbox input:checked ~ .checkmark {
+background-color: #4f46e5;
+border-color: #4f46e5;
+}
+.checkmark:after {
+content: "";
+position: absolute;
+display: none;
+}
+.custom-checkbox input:checked ~ .checkmark:after {
+display: block;
+}
+.custom-checkbox .checkmark:after {
+left: 6px;
+top: 2px;
+width: 5px;
+height: 10px;
+border: solid white;
+border-width: 0 2px 2px 0;
+transform: rotate(45deg);
+}
+.price-slider {
+-webkit-appearance: none;
+width: 100%;
+height: 4px;
+background: #e5e7eb;
+border-radius: 5px;
+outline: none;
+}
+.price-slider::-webkit-slider-thumb {
+-webkit-appearance: none;
+appearance: none;
+width: 18px;
+height: 18px;
+border-radius: 50%;
+background: #4f46e5;
+cursor: pointer;
+}
+.price-slider::-moz-range-thumb {
+width: 18px;
+height: 18px;
+border-radius: 50%;
+background: #4f46e5;
+cursor: pointer;
+border: none;
+}
+.custom-switch {
+position: relative;
+display: inline-block;
+width: 44px;
+height: 22px;
+}
+.custom-switch input {
+opacity: 0;
+width: 0;
+height: 0;
+}
+.switch-slider {
+position: absolute;
+cursor: pointer;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background-color: #e5e7eb;
+transition: .4s;
+border-radius: 34px;
+}
+.switch-slider:before {
+position: absolute;
+content: "";
+height: 18px;
+width: 18px;
+left: 3px;
+bottom: 2px;
+background-color: white;
+transition: .4s;
+border-radius: 50%;
+}
+input:checked + .switch-slider {
+background-color: #4f46e5;
+}
+input:checked + .switch-slider:before {
+transform: translateX(20px);
+}
+.cart-preview {
+max-height: 0;
+overflow: hidden;
+transition: max-height 0.3s ease-out;
+}
+.cart-container:hover .cart-preview {
+max-height: 400px;
+}
+</style>
+</head>
+<body class="bg-gray-50">
+<!-- Header -->
+<header class="bg-white shadow-sm sticky top-0 z-50">
+<!-- Top Navigation -->
+<div class="container mx-auto px-4 py-3 flex items-center justify-between">
+<!-- Logo -->
+<a href="#" class="font-['Pacifico'] text-2xl text-primary">ShopSwift</a>
+<!-- Search Bar -->
+<div class="hidden md:flex items-center flex-1 max-w-xl mx-4">
+<div class="relative w-full">
+<input type="text" placeholder="Search for products..." class="w-full pl-10 pr-4 py-2 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm">
+<div class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 flex items-center justify-center text-gray-400">
+<i class="ri-search-line"></i>
+</div>
+</div>
+<div class="relative ml-2">
+<button class="flex items-center bg-gray-100 hover:bg-gray-200 rounded-full px-3 py-2 text-sm font-medium text-gray-700 !rounded-button whitespace-nowrap">
+<span>All Categories</span>
+<div class="ml-1 w-4 h-4 flex items-center justify-center">
+<i class="ri-arrow-down-s-line"></i>
+</div>
+</button>
+</div>
+</div>
+<!-- Navigation Icons -->
+<div class="flex items-center space-x-4">
+<div class="relative cart-container">
+<a href="#" class="relative block w-10 h-10 flex items-center justify-center text-gray-700 hover:text-primary">
+<i class="ri-heart-line text-xl"></i>
+<span class="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
+</a>
+</div>
+<div class="relative cart-container">
+<a href="#" class="relative block w-10 h-10 flex items-center justify-center text-gray-700 hover:text-primary">
+<i class="ri-shopping-cart-line text-xl"></i>
+<span class="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">2</span>
+</a>
+<!-- Cart Preview -->
+<div class="cart-preview absolute right-0 mt-2 w-80 bg-white rounded shadow-lg border border-gray-100 z-50">
+<div class="p-4">
+<h3 class="font-semibold text-gray-900 mb-3">Your Cart (2 items)</h3>
+<div class="space-y-3 mb-3">
+<div class="flex items-center">
+<img src="https://readdy.ai/api/search-image?query=Premium%20wireless%20headphones%20with%20sleek%20design%20on%20clean%20white%20background%2C%20professional%20product%20photography%20with%20soft%20shadows%20and%20high%20detail%2C%20showing%20premium%20materials%20and%20modern%20aesthetic&width=80&height=80&seq=2&orientation=squarish" alt="Wireless Headphones" class="w-16 h-16 object-cover rounded">
+<div class="ml-3 flex-1">
+<h4 class="text-sm font-medium text-gray-900">Premium Wireless Headphones</h4>
+<div class="flex justify-between mt-1">
+<span class="text-sm text-gray-600">1 × $129.99</span>
+<button class="text-gray-400 hover:text-red-500 w-6 h-6 flex items-center justify-center">
+<i class="ri-delete-bin-line"></i>
+</button>
+</div>
+</div>
+</div>
+<div class="flex items-center">
+<img src="https://readdy.ai/api/search-image?query=Elegant%20smartwatch%20with%20leather%20strap%20on%20clean%20white%20background%2C%20professional%20product%20photography%20with%20soft%20shadows%20and%20high%20detail%2C%20showing%20premium%20materials%20and%20modern%20aesthetic&width=80&height=80&seq=3&orientation=squarish" alt="Smartwatch" class="w-16 h-16 object-cover rounded">
+<div class="ml-3 flex-1">
+<h4 class="text-sm font-medium text-gray-900">Elegant Smartwatch</h4>
+<div class="flex justify-between mt-1">
+<span class="text-sm text-gray-600">1 × $199.99</span>
+<button class="text-gray-400 hover:text-red-500 w-6 h-6 flex items-center justify-center">
+<i class="ri-delete-bin-line"></i>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="border-t border-gray-100 pt-3 pb-2">
+<div class="flex justify-between text-sm">
+<span class="font-medium text-gray-900">Subtotal:</span>
+<span class="font-semibold text-gray-900">$329.98</span>
+</div>
+</div>
+<div class="mt-3 flex space-x-2">
+<a href="#" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium py-2 px-4 rounded text-center !rounded-button whitespace-nowrap">View Cart</a>
+<a href="#" class="flex-1 bg-primary hover:bg-primary/90 text-white text-sm font-medium py-2 px-4 rounded text-center !rounded-button whitespace-nowrap">Checkout</a>
+</div>
+</div>
+</div>
+</div>
+<a href="#" class="w-10 h-10 flex items-center justify-center text-gray-700 hover:text-primary">
+<i class="ri-user-line text-xl"></i>
+</a>
+</div>
+</div>
+<!-- Category Navigation -->
+<nav class="border-t border-gray-100">
+<div class="container mx-auto px-4">
+<ul class="flex items-center space-x-8 overflow-x-auto py-3 text-sm font-medium text-gray-700 no-scrollbar">
+<li><a href="#" class="hover:text-primary">Home</a></li>
+<li><a href="#" class="hover:text-primary">Electronics</a></li>
+<li><a href="#" class="hover:text-primary">Fashion</a></li>
+<li><a href="#" class="hover:text-primary">Home & Garden</a></li>
+<li><a href="#" class="hover:text-primary">Sports</a></li>
+<li><a href="#" class="hover:text-primary">Beauty</a></li>
+<li><a href="#" class="hover:text-primary">Toys</a></li>
+<li><a href="#" class="hover:text-primary">Automotive</a></li>
+<li><a href="#" class="hover:text-primary">Books</a></li>
+<li><a href="#" class="hover:text-primary">Deals</a></li>
+</ul>
+</div>
+</nav>
+</header>
+<!-- Hero Section -->
+<section class="hero-section relative">
+<div class="container mx-auto px-4 py-16 md:py-24 flex items-center min-h-[500px]">
+<div class="w-full max-w-xl text-left z-10">
+<h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Summer Collection 2025</h1>
+<p class="text-lg text-gray-700 mb-8">Discover our latest arrivals with up to 40% off. Limited time offer on selected items.</p>
+<div class="flex flex-wrap gap-3">
+<a href="#" class="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-lg font-medium !rounded-button whitespace-nowrap">Shop Now</a>
+<a href="#" class="bg-white hover:bg-gray-50 text-gray-800 border border-gray-200 px-6 py-3 rounded-lg font-medium !rounded-button whitespace-nowrap">Explore Collections</a>
+</div>
+</div>
+</div>
+</section>
+<!-- Featured Categories -->
+<section class="py-12 bg-white">
+<div class="container mx-auto px-4">
+<h2 class="text-2xl font-bold text-gray-900 mb-8">Shop by Category</h2>
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+<a href="#" class="group">
+<div class="bg-gray-50 rounded-lg p-6 flex flex-col items-center transition-all duration-200 group-hover:shadow-md">
+<div class="w-12 h-12 flex items-center justify-center text-primary mb-3">
+<i class="ri-smartphone-line text-2xl"></i>
+</div>
+<h3 class="text-sm font-medium text-gray-900 text-center">Smartphones</h3>
+</div>
+</a>
+<a href="#" class="group">
+<div class="bg-gray-50 rounded-lg p-6 flex flex-col items-center transition-all duration-200 group-hover:shadow-md">
+<div class="w-12 h-12 flex items-center justify-center text-primary mb-3">
+<i class="ri-t-shirt-line text-2xl"></i>
+</div>
+<h3 class="text-sm font-medium text-gray-900 text-center">Clothing</h3>
+</div>
+</a>
+<a href="#" class="group">
+<div class="bg-gray-50 rounded-lg p-6 flex flex-col items-center transition-all duration-200 group-hover:shadow-md">
+<div class="w-12 h-12 flex items-center justify-center text-primary mb-3">
+<i class="ri-headphone-line text-2xl"></i>
+</div>
+<h3 class="text-sm font-medium text-gray-900 text-center">Accessories</h3>
+</div>
+</a>
+<a href="#" class="group">
+<div class="bg-gray-50 rounded-lg p-6 flex flex-col items-center transition-all duration-200 group-hover:shadow-md">
+<div class="w-12 h-12 flex items-center justify-center text-primary mb-3">
+<i class="ri-home-line text-2xl"></i>
+</div>
+<h3 class="text-sm font-medium text-gray-900 text-center">Home Decor</h3>
+</div>
+</a>
+<a href="#" class="group">
+<div class="bg-gray-50 rounded-lg p-6 flex flex-col items-center transition-all duration-200 group-hover:shadow-md">
+<div class="w-12 h-12 flex items-center justify-center text-primary mb-3">
+<i class="ri-computer-line text-2xl"></i>
+</div>
+<h3 class="text-sm font-medium text-gray-900 text-center">Computers</h3>
+</div>
+</a>
+<a href="#" class="group">
+<div class="bg-gray-50 rounded-lg p-6 flex flex-col items-center transition-all duration-200 group-hover:shadow-md">
+<div class="w-12 h-12 flex items-center justify-center text-primary mb-3">
+<i class="ri-watch-line text-2xl"></i>
+</div>
+<h3 class="text-sm font-medium text-gray-900 text-center">Watches</h3>
+</div>
+</a>
+</div>
+</div>
+</section>
+<!-- Main Content -->
+<section class="py-12 bg-gray-50">
+<div class="container mx-auto px-4">
+<div class="flex flex-col lg:flex-row gap-8">
+<!-- Filters Sidebar -->
+<div class="lg:w-1/4">
+<div class="bg-white rounded-lg shadow-sm p-6">
+<h3 class="font-semibold text-lg text-gray-900 mb-4">Filters</h3>
+<!-- Price Range -->
+<div class="mb-6">
+<h4 class="font-medium text-gray-900 mb-3">Price Range</h4>
+<input type="range" min="0" max="1000" value="500" class="price-slider mb-2">
+<div class="flex justify-between text-sm text-gray-600">
+<span>$0</span>
+<span>$1000</span>
+</div>
+<div class="flex items-center mt-3 gap-2">
+<input type="number" placeholder="Min" class="w-full px-3 py-2 border border-gray-200 rounded text-sm">
+<span class="text-gray-400">-</span>
+<input type="number" placeholder="Max" class="w-full px-3 py-2 border border-gray-200 rounded text-sm">
+</div>
+</div>
+<!-- Categories -->
+<div class="mb-6">
+<h4 class="font-medium text-gray-900 mb-3">Categories</h4>
+<div class="space-y-2">
+<label class="custom-checkbox block text-sm text-gray-700">
+Electronics
+<input type="checkbox" checked>
+<span class="checkmark"></span>
+</label>
+<label class="custom-checkbox block text-sm text-gray-700">
+Clothing
+<input type="checkbox">
+<span class="checkmark"></span>
+</label>
+<label class="custom-checkbox block text-sm text-gray-700">
+Home & Garden
+<input type="checkbox">
+<span class="checkmark"></span>
+</label>
+<label class="custom-checkbox block text-sm text-gray-700">
+Sports & Outdoors
+<input type="checkbox">
+<span class="checkmark"></span>
+</label>
+<label class="custom-checkbox block text-sm text-gray-700">
+Beauty & Personal Care
+<input type="checkbox">
+<span class="checkmark"></span>
+</label>
+</div>
+</div>
+<!-- Brands -->
+<div class="mb-6">
+<h4 class="font-medium text-gray-900 mb-3">Brands</h4>
+<div class="space-y-2">
+<label class="custom-checkbox block text-sm text-gray-700">
+Apple
+<input type="checkbox">
+<span class="checkmark"></span>
+</label>
+<label class="custom-checkbox block text-sm text-gray-700">
+Samsung
+<input type="checkbox" checked>
+<span class="checkmark"></span>
+</label>
+<label class="custom-checkbox block text-sm text-gray-700">
+Sony
+<input type="checkbox">
+<span class="checkmark"></span>
+</label>
+<label class="custom-checkbox block text-sm text-gray-700">
+Nike
+<input type="checkbox">
+<span class="checkmark"></span>
+</label>
+<label class="custom-checkbox block text-sm text-gray-700">
+Adidas
+<input type="checkbox">
+<span class="checkmark"></span>
+</label>
+</div>
+</div>
+<!-- Ratings -->
+<div class="mb-6">
+<h4 class="font-medium text-gray-900 mb-3">Ratings</h4>
+<div class="space-y-2">
+<label class="flex items-center text-sm text-gray-700 cursor-pointer">
+<input type="radio" name="rating" class="hidden">
+<div class="w-4 h-4 border border-gray-300 rounded-full mr-2 flex items-center justify-center">
+<div class="w-2 h-2 bg-primary rounded-full hidden"></div>
+</div>
+<div class="flex text-yellow-400">
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<span class="ml-1 text-gray-600">& Up</span>
+</div>
+</label>
+<label class="flex items-center text-sm text-gray-700 cursor-pointer">
+<input type="radio" name="rating" class="hidden" checked>
+<div class="w-4 h-4 border border-gray-300 rounded-full mr-2 flex items-center justify-center">
+<div class="w-2 h-2 bg-primary rounded-full"></div>
+</div>
+<div class="flex text-yellow-400">
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-line"></i>
+<span class="ml-1 text-gray-600">& Up</span>
+</div>
+</label>
+<label class="flex items-center text-sm text-gray-700 cursor-pointer">
+<input type="radio" name="rating" class="hidden">
+<div class="w-4 h-4 border border-gray-300 rounded-full mr-2 flex items-center justify-center">
+<div class="w-2 h-2 bg-primary rounded-full hidden"></div>
+</div>
+<div class="flex text-yellow-400">
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-line"></i>
+<i class="ri-star-line"></i>
+<span class="ml-1 text-gray-600">& Up</span>
+</div>
+</label>
+<label class="flex items-center text-sm text-gray-700 cursor-pointer">
+<input type="radio" name="rating" class="hidden">
+<div class="w-4 h-4 border border-gray-300 rounded-full mr-2 flex items-center justify-center">
+<div class="w-2 h-2 bg-primary rounded-full hidden"></div>
+</div>
+<div class="flex text-yellow-400">
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-line"></i>
+<i class="ri-star-line"></i>
+<i class="ri-star-line"></i>
+<span class="ml-1 text-gray-600">& Up</span>
+</div>
+</label>
+</div>
+</div>
+<!-- Availability -->
+<div>
+<h4 class="font-medium text-gray-900 mb-3">Availability</h4>
+<div class="flex items-center justify-between">
+<span class="text-sm text-gray-700">In Stock Only</span>
+<label class="custom-switch">
+<input type="checkbox" checked>
+<span class="switch-slider"></span>
+</label>
+</div>
+</div>
+</div>
+</div>
+<!-- Product Grid -->
+<div class="lg:w-3/4">
+<!-- Sorting Options -->
+<div class="bg-white rounded-lg shadow-sm p-4 mb-6 flex flex-wrap items-center justify-between gap-4">
+<div class="flex items-center">
+<span class="text-sm text-gray-600 mr-2">Sort by:</span>
+<div class="relative">
+<button class="bg-white border border-gray-200 rounded px-4 py-2 text-sm font-medium text-gray-700 flex items-center !rounded-button whitespace-nowrap">
+<span>Most Popular</span>
+<div class="ml-2 w-4 h-4 flex items-center justify-center">
+<i class="ri-arrow-down-s-line"></i>
+</div>
+</button>
+</div>
+</div>
+<div class="flex items-center">
+<span class="text-sm text-gray-600 mr-2">View:</span>
+<div class="flex border border-gray-200 rounded-lg overflow-hidden">
+<button class="bg-primary text-white px-3 py-2 text-sm">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-layout-grid-line"></i>
+</div>
+</button>
+<button class="bg-white text-gray-600 hover:bg-gray-50 px-3 py-2 text-sm">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-list-check"></i>
+</div>
+</button>
+</div>
+</div>
+</div>
+<!-- Products -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Product Card 1 -->
+<div class="bg-white rounded-lg shadow-sm overflow-hidden group">
+<div class="relative">
+<img src="https://readdy.ai/api/search-image?query=Premium%20wireless%20headphones%20with%20sleek%20design%20on%20clean%20white%20background%2C%20professional%20product%20photography%20with%20soft%20shadows%20and%20high%20detail%2C%20showing%20premium%20materials%20and%20modern%20aesthetic&width=400&height=300&seq=4&orientation=landscape" alt="Wireless Headphones" class="w-full h-48 object-cover object-top">
+<div class="absolute top-3 right-3 flex space-x-2">
+<button class="w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center text-gray-400 hover:text-primary">
+<i class="ri-heart-line"></i>
+</button>
+</div>
+<div class="absolute top-3 left-3">
+<span class="bg-primary text-white text-xs font-medium px-2 py-1 rounded">New</span>
+</div>
+</div>
+<div class="p-4">
+<div class="flex text-yellow-400 mb-1">
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-half-fill"></i>
+<span class="text-xs text-gray-500 ml-1">(128)</span>
+</div>
+<h3 class="font-medium text-gray-900 mb-1">Premium Wireless Headphones</h3>
+<p class="text-sm text-gray-500 mb-2">By Sony</p>
+<div class="flex items-center justify-between">
+<div>
+<span class="text-lg font-semibold text-gray-900">₹9,999</span>
+<span class="text-sm text-gray-500 line-through ml-2">₹11,999</span>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-white rounded-full w-10 h-10 flex items-center justify-center !rounded-button whitespace-nowrap">
+<i class="ri-shopping-cart-line"></i>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="bg-white rounded-lg shadow-sm overflow-hidden group">
+<div class="relative">
+<img src="https://readdy.ai/api/search-image?query=Elegant%20smartwatch%20with%20leather%20strap%20on%20clean%20white%20background%2C%20professional%20product%20photography%20with%20soft%20shadows%20and%20high%20detail%2C%20showing%20premium%20materials%20and%20modern%20aesthetic&width=400&height=300&seq=5&orientation=landscape" alt="Smartwatch" class="w-full h-48 object-cover object-top">
+<div class="absolute top-3 right-3 flex space-x-2">
+<button class="w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center text-gray-400 hover:text-primary">
+<i class="ri-heart-line"></i>
+</button>
+</div>
+<div class="absolute top-3 left-3">
+<span class="bg-secondary text-white text-xs font-medium px-2 py-1 rounded">Sale</span>
+</div>
+</div>
+<div class="p-4">
+<div class="flex text-yellow-400 mb-1">
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-line"></i>
+<span class="text-xs text-gray-500 ml-1">(96)</span>
+</div>
+<h3 class="font-medium text-gray-900 mb-1">Elegant Smartwatch</h3>
+<p class="text-sm text-gray-500 mb-2">By Apple</p>
+<div class="flex items-center justify-between">
+<div>
+<span class="text-lg font-semibold text-gray-900">₹15,999</span>
+<span class="text-sm text-gray-500 line-through ml-2">₹19,999</span>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-white rounded-full w-10 h-10 flex items-center justify-center !rounded-button whitespace-nowrap">
+<i class="ri-shopping-cart-line"></i>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="bg-white rounded-lg shadow-sm overflow-hidden group">
+<div class="relative">
+<img src="https://readdy.ai/api/search-image?query=Premium%20portable%20bluetooth%20speaker%20on%20clean%20white%20background%2C%20professional%20product%20photography%20with%20soft%20shadows%20and%20high%20detail%2C%20showing%20premium%20materials%20and%20modern%20aesthetic&width=400&height=300&seq=6&orientation=landscape" alt="Bluetooth Speaker" class="w-full h-48 object-cover object-top">
+<div class="absolute top-3 right-3 flex space-x-2">
+<button class="w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center text-primary">
+<i class="ri-heart-fill"></i>
+</button>
+</div>
+</div>
+<div class="p-4">
+<div class="flex text-yellow-400 mb-1">
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<span class="text-xs text-gray-500 ml-1">(214)</span>
+</div>
+<h3 class="font-medium text-gray-900 mb-1">Portable Bluetooth Speaker</h3>
+<p class="text-sm text-gray-500 mb-2">By JBL</p>
+<div class="flex items-center justify-between">
+<div>
+<span class="text-lg font-semibold text-gray-900">₹6,999</span>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-white rounded-full w-10 h-10 flex items-center justify-center !rounded-button whitespace-nowrap">
+<i class="ri-shopping-cart-line"></i>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="bg-white rounded-lg shadow-sm overflow-hidden group">
+<div class="relative">
+<img src="https://readdy.ai/api/search-image?query=Stylish%20laptop%20backpack%20on%20clean%20white%20background%2C%20professional%20product%20photography%20with%20soft%20shadows%20and%20high%20detail%2C%20showing%20premium%20materials%20and%20modern%20aesthetic&width=400&height=300&seq=7&orientation=landscape" alt="Laptop Backpack" class="w-full h-48 object-cover object-top">
+<div class="absolute top-3 right-3 flex space-x-2">
+<button class="w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center text-gray-400 hover:text-primary">
+<i class="ri-heart-line"></i>
+</button>
+</div>
+</div>
+<div class="p-4">
+<div class="flex text-yellow-400 mb-1">
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-line"></i>
+<span class="text-xs text-gray-500 ml-1">(76)</span>
+</div>
+<h3 class="font-medium text-gray-900 mb-1">Stylish Laptop Backpack</h3>
+<p class="text-sm text-gray-500 mb-2">By North Face</p>
+<div class="flex items-center justify-between">
+<div>
+<span class="text-lg font-semibold text-gray-900">₹4,499</span>
+<span class="text-sm text-gray-500 line-through ml-2">₹5,999</span>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-white rounded-full w-10 h-10 flex items-center justify-center !rounded-button whitespace-nowrap">
+<i class="ri-shopping-cart-line"></i>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 5 -->
+<div class="bg-white rounded-lg shadow-sm overflow-hidden group">
+<div class="relative">
+<img src="https://readdy.ai/api/search-image?query=Modern%20minimalist%20desk%20lamp%20on%20clean%20white%20background%2C%20professional%20product%20photography%20with%20soft%20shadows%20and%20high%20detail%2C%20showing%20premium%20materials%20and%20modern%20aesthetic&width=400&height=300&seq=8&orientation=landscape" alt="Desk Lamp" class="w-full h-48 object-cover object-top">
+<div class="absolute top-3 right-3 flex space-x-2">
+<button class="w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center text-gray-400 hover:text-primary">
+<i class="ri-heart-line"></i>
+</button>
+</div>
+<div class="absolute top-3 left-3">
+<span class="bg-accent1 text-white text-xs font-medium px-2 py-1 rounded">Eco</span>
+</div>
+</div>
+<div class="p-4">
+<div class="flex text-yellow-400 mb-1">
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-half-fill"></i>
+<i class="ri-star-line"></i>
+<span class="text-xs text-gray-500 ml-1">(52)</span>
+</div>
+<h3 class="font-medium text-gray-900 mb-1">Modern Desk Lamp</h3>
+<p class="text-sm text-gray-500 mb-2">By IKEA</p>
+<div class="flex items-center justify-between">
+<div>
+<span class="text-lg font-semibold text-gray-900">₹2,999</span>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-white rounded-full w-10 h-10 flex items-center justify-center !rounded-button whitespace-nowrap">
+<i class="ri-shopping-cart-line"></i>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 6 -->
+<div class="bg-white rounded-lg shadow-sm overflow-hidden group">
+<div class="relative">
+<img src="https://readdy.ai/api/search-image?query=Premium%20coffee%20maker%20machine%20on%20clean%20white%20background%2C%20professional%20product%20photography%20with%20soft%20shadows%20and%20high%20detail%2C%20showing%20premium%20materials%20and%20modern%20aesthetic&width=400&height=300&seq=9&orientation=landscape" alt="Coffee Maker" class="w-full h-48 object-cover object-top">
+<div class="absolute top-3 right-3 flex space-x-2">
+<button class="w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center text-gray-400 hover:text-primary">
+<i class="ri-heart-line"></i>
+</button>
+</div>
+<div class="absolute top-3 left-3">
+<span class="bg-accent3 text-white text-xs font-medium px-2 py-1 rounded">Hot</span>
+</div>
+</div>
+<div class="p-4">
+<div class="flex text-yellow-400 mb-1">
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-half-fill"></i>
+<span class="text-xs text-gray-500 ml-1">(148)</span>
+</div>
+<h3 class="font-medium text-gray-900 mb-1">Premium Coffee Maker</h3>
+<p class="text-sm text-gray-500 mb-2">By Breville</p>
+<div class="flex items-center justify-between">
+<div>
+<span class="text-lg font-semibold text-gray-900">₹13,999</span>
+<span class="text-sm text-gray-500 line-through ml-2">₹15,999</span>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-white rounded-full w-10 h-10 flex items-center justify-center !rounded-button whitespace-nowrap">
+<i class="ri-shopping-cart-line"></i>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination -->
+<div class="mt-8 flex justify-center">
+<nav class="flex items-center space-x-1">
+<a href="#" class="px-3 py-2 rounded text-gray-500 hover:bg-gray-100">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-arrow-left-s-line"></i>
+</div>
+</a>
+<a href="#" class="px-3 py-2 rounded bg-primary text-white">1</a>
+<a href="#" class="px-3 py-2 rounded text-gray-700 hover:bg-gray-100">2</a>
+<a href="#" class="px-3 py-2 rounded text-gray-700 hover:bg-gray-100">3</a>
+<span class="px-3 py-2 text-gray-500">...</span>
+<a href="#" class="px-3 py-2 rounded text-gray-700 hover:bg-gray-100">8</a>
+<a href="#" class="px-3 py-2 rounded text-gray-500 hover:bg-gray-100">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-arrow-right-s-line"></i>
+</div>
+</a>
+</nav>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Featured Products -->
+<section class="py-12 bg-white">
+<div class="container mx-auto px-4">
+<div class="flex justify-between items-center mb-8">
+<h2 class="text-2xl font-bold text-gray-900">Featured Products</h2>
+<a href="#" class="text-primary font-medium hover:underline flex items-center">
+View All
+<div class="ml-1 w-5 h-5 flex items-center justify-center">
+<i class="ri-arrow-right-line"></i>
+</div>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Featured Product 1 -->
+<div class="bg-gray-50 rounded-lg p-6 flex flex-col items-center text-center">
+<img src="https://readdy.ai/api/search-image?query=Latest%20model%20smartphone%20with%20sleek%20design%20on%20clean%20white%20background%2C%20professional%20product%20photography%20with%20soft%20shadows%20and%20high%20detail%2C%20showing%20premium%20materials%20and%20modern%20aesthetic&width=200&height=200&seq=10&orientation=squarish" alt="Smartphone" class="w-32 h-32 object-contain mb-4">
+<h3 class="font-medium text-gray-900 mb-1">Latest Smartphone</h3>
+<p class="text-sm text-gray-500 mb-3">Ultra fast. Ultra powerful.</p>
+<span class="text-lg font-semibold text-gray-900 mb-4">From ₹59,999</span>
+<a href="#" class="bg-primary hover:bg-primary/90 text-white px-6 py-2 rounded font-medium w-full !rounded-button whitespace-nowrap">Learn More</a>
+</div>
+<!-- Featured Product 2 -->
+<div class="bg-gray-50 rounded-lg p-6 flex flex-col items-center text-center">
+<img src="https://readdy.ai/api/search-image?query=Premium%20wireless%20earbuds%20with%20charging%20case%20on%20clean%20white%20background%2C%20professional%20product%20photography%20with%20soft%20shadows%20and%20high%20detail%2C%20showing%20premium%20materials%20and%20modern%20aesthetic&width=200&height=200&seq=11&orientation=squarish" alt="Wireless Earbuds" class="w-32 h-32 object-contain mb-4">
+<h3 class="font-medium text-gray-900 mb-1">Wireless Earbuds</h3>
+<p class="text-sm text-gray-500 mb-3">Immersive sound experience.</p>
+<span class="text-lg font-semibold text-gray-900 mb-4">₹11,999</span>
+<a href="#" class="bg-primary hover:bg-primary/90 text-white px-6 py-2 rounded font-medium w-full !rounded-button whitespace-nowrap">Learn More</a>
+</div>
+<!-- Featured Product 3 -->
+<div class="bg-gray-50 rounded-lg p-6 flex flex-col items-center text-center">
+<img src="https://readdy.ai/api/search-image?query=Slim%20ultrabook%20laptop%20computer%20on%20clean%20white%20background%2C%20professional%20product%20photography%20with%20soft%20shadows%20and%20high%20detail%2C%20showing%20premium%20materials%20and%20modern%20aesthetic&width=200&height=200&seq=12&orientation=squarish" alt="Laptop" class="w-32 h-32 object-contain mb-4">
+<h3 class="font-medium text-gray-900 mb-1">Ultra Slim Laptop</h3>
+<p class="text-sm text-gray-500 mb-3">Power and portability.</p>
+<span class="text-lg font-semibold text-gray-900 mb-4">From ₹89,999</span>
+<a href="#" class="bg-primary hover:bg-primary/90 text-white px-6 py-2 rounded font-medium w-full !rounded-button whitespace-nowrap">Learn More</a>
+</div>
+<!-- Featured Product 4 -->
+<div class="bg-gray-50 rounded-lg p-6 flex flex-col items-center text-center">
+<img src="https://readdy.ai/api/search-image?query=Smart%20home%20speaker%20with%20modern%20design%20on%20clean%20white%20background%2C%20professional%20product%20photography%20with%20soft%20shadows%20and%20high%20detail%2C%20showing%20premium%20materials%20and%20modern%20aesthetic&width=200&height=200&seq=13&orientation=squarish" alt="Smart Speaker" class="w-32 h-32 object-contain mb-4">
+<h3 class="font-medium text-gray-900 mb-1">Smart Home Speaker</h3>
+<p class="text-sm text-gray-500 mb-3">Voice-controlled assistant.</p>
+<span class="text-lg font-semibold text-gray-900 mb-4">₹9,999</span>
+<a href="#" class="bg-primary hover:bg-primary/90 text-white px-6 py-2 rounded font-medium w-full !rounded-button whitespace-nowrap">Learn More</a>
+</div>
+</div>
+</div>
+</section>
+<!-- Newsletter -->
+<section class="py-16 bg-gray-50">
+<div class="container mx-auto px-4">
+<div class="max-w-3xl mx-auto text-center">
+<h2 class="text-2xl font-bold text-gray-900 mb-3">Subscribe to Our Newsletter</h2>
+<p class="text-gray-600 mb-6">Stay updated with our latest products and exclusive offers.</p>
+<div class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+<input type="email" placeholder="Your email address" class="flex-1 px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+<button class="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-lg font-medium !rounded-button whitespace-nowrap">Subscribe</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-white pt-12 pb-8 border-t border-gray-100">
+<div class="container mx-auto px-4">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+<!-- Company Info -->
+<div class="lg:col-span-2">
+<a href="#" class="font-['Pacifico'] text-2xl text-primary mb-4 inline-block">ShopSwift</a>
+<p class="text-gray-600 mb-4">ShopSwift offers a wide range of products with fast delivery and excellent customer service. We're committed to providing the best shopping experience.</p>
+<div class="flex space-x-4">
+<a href="#" class="text-gray-400 hover:text-primary w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full">
+<i class="ri-facebook-fill"></i>
+</a>
+<a href="#" class="text-gray-400 hover:text-primary w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full">
+<i class="ri-twitter-fill"></i>
+</a>
+<a href="#" class="text-gray-400 hover:text-primary w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full">
+<i class="ri-instagram-fill"></i>
+</a>
+<a href="#" class="text-gray-400 hover:text-primary w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full">
+<i class="ri-youtube-fill"></i>
+</a>
+</div>
+</div>
+<!-- Quick Links -->
+<div>
+<h3 class="font-semibold text-gray-900 mb-4">Quick Links</h3>
+<ul class="space-y-2">
+<li><a href="#" class="text-gray-600 hover:text-primary">Home</a></li>
+<li><a href="#" class="text-gray-600 hover:text-primary">Shop</a></li>
+<li><a href="#" class="text-gray-600 hover:text-primary">Categories</a></li>
+<li><a href="#" class="text-gray-600 hover:text-primary">Deals</a></li>
+<li><a href="#" class="text-gray-600 hover:text-primary">New Arrivals</a></li>
+</ul>
+</div>
+<!-- Customer Service -->
+<div>
+<h3 class="font-semibold text-gray-900 mb-4">Customer Service</h3>
+<ul class="space-y-2">
+<li><a href="#" class="text-gray-600 hover:text-primary">Contact Us</a></li>
+<li><a href="#" class="text-gray-600 hover:text-primary">FAQs</a></li>
+<li><a href="#" class="text-gray-600 hover:text-primary">Shipping & Returns</a></li>
+<li><a href="#" class="text-gray-600 hover:text-primary">Order Tracking</a></li>
+<li><a href="#" class="text-gray-600 hover:text-primary">Help Center</a></li>
+</ul>
+</div>
+<!-- My Account -->
+<div>
+<h3 class="font-semibold text-gray-900 mb-4">My Account</h3>
+<ul class="space-y-2">
+<li><a href="#" class="text-gray-600 hover:text-primary">Sign In</a></li>
+<li><a href="#" class="text-gray-600 hover:text-primary">View Cart</a></li>
+<li><a href="#" class="text-gray-600 hover:text-primary">My Wishlist</a></li>
+<li><a href="#" class="text-gray-600 hover:text-primary">Track My Order</a></li>
+<li><a href="#" class="text-gray-600 hover:text-primary">Help</a></li>
+</ul>
+</div>
+</div>
+<div class="mt-12 pt-8 border-t border-gray-100">
+<div class="flex flex-col md:flex-row justify-between items-center">
+<p class="text-gray-600 text-sm mb-4 md:mb-0">&copy; 2025 ShopSwift. All rights reserved.</p>
+<div class="flex flex-wrap items-center gap-4">
+<div class="flex items-center text-gray-500">
+<div class="w-6 h-6 flex items-center justify-center mr-2">
+<i class="ri-visa-fill text-xl"></i>
+</div>
+<div class="w-6 h-6 flex items-center justify-center mr-2">
+<i class="ri-mastercard-fill text-xl"></i>
+</div>
+<div class="w-6 h-6 flex items-center justify-center mr-2">
+<i class="ri-paypal-fill text-xl"></i>
+</div>
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-apple-fill text-xl"></i>
+</div>
+</div>
+<div class="flex space-x-4">
+<a href="#" class="text-gray-600 hover:text-primary text-sm">Privacy Policy</a>
+<a href="#" class="text-gray-600 hover:text-primary text-sm">Terms of Service</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</footer>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+// Radio buttons for ratings
+const radioButtons = document.querySelectorAll('input[type="radio"][name="rating"]');
+radioButtons.forEach(radio => {
+radio.addEventListener('change', function() {
+// Hide all indicators
+document.querySelectorAll('input[type="radio"][name="rating"] + div .bg-primary').forEach(el => {
+el.classList.add('hidden');
+});
+// Show the selected indicator
+if (this.checked) {
+const indicator = this.nextElementSibling.querySelector('.bg-primary');
+indicator.classList.remove('hidden');
+}
+});
+});
+});
+</script>
+</body>
+</html>
